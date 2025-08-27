@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Wordnik.Dotnet.Client.Models;
+using Wordnik.Dotnet.Client.Requests;
 
 namespace Wordnik.Dotnet.Client
 {
     public class WordnikClient : IWordnikClient
     {
-        private readonly string _apiKey;
         private readonly HttpClient _httpClient;
 
         private const string BaseUrl = "https://api.wordnik.com/v4";
@@ -27,7 +27,6 @@ namespace Wordnik.Dotnet.Client
                 throw new ArgumentException("API key cannot be null or empty.", nameof(apiKey));
             }
                 
-            _apiKey = apiKey;
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
             _httpClient.BaseAddress ??= new Uri(BaseUrl);
@@ -35,9 +34,19 @@ namespace Wordnik.Dotnet.Client
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<DefinitionResponse>> GetDefinitionsAsync(string word, int limit = 10)
+        public async Task<IEnumerable<DefinitionResponse>> GetDefinitionsAsync(GetDefinitionsRequest request)
         {
-            var url = $"/word.json/{word}/definitions?limit={limit}";
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
+            if (string.IsNullOrWhiteSpace(request.Word))
+            {
+                throw new ArgumentException("Word cannot be null or empty.", nameof(request.Word));
+            }
+
+            var url = $"word.json/{Uri.EscapeDataString(request.Word)}/definitions?{request}";
 
             var response = await _httpClient.GetAsync(url);
             if (!response.IsSuccessStatusCode)

@@ -2,14 +2,10 @@ using Wordnik.Dotnet.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddHttpClient<WordnikClient>(client =>
+builder.Services.AddHttpClient<IWordnikClient, WordnikClient>((_, httpClient) =>
 {
-    client.BaseAddress = new Uri("https://api.wordnik.com/v4");
-});
-
-builder.Services.AddSingleton(provider =>
-{
-    return new WordnikClient(provider.GetRequiredService<HttpClient>(), "YOUR_API_KEY");
+    httpClient.BaseAddress = new Uri("https://api.wordnik.com/v4/");
+    httpClient.DefaultRequestHeaders.Add("api_key", "your-api-key");
 });
 
 builder.Services.AddControllers();

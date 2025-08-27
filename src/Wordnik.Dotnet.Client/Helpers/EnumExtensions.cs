@@ -12,6 +12,11 @@ namespace Wordnik.Dotnet.Client.Helpers
         /// </summary>
         public static string ToApiString<TEnum>(this TEnum enumValue) where TEnum : Enum
         {
+            if (!Enum.IsDefined(typeof(TEnum), enumValue))
+            {
+                throw new ArgumentException($"The value '{Convert.ToInt32(enumValue)}' is not valid for enum '{typeof(TEnum).Name}'.");
+            }
+
             var memberInfo = typeof(TEnum).GetMember(enumValue.ToString());
             var displayAttribute = memberInfo[0].GetCustomAttribute<DisplayAttribute>();
 
