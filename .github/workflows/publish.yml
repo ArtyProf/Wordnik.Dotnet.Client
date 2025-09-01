@@ -1,12 +1,16 @@
 name: Check Version Change, Sign, and Publish to NuGet
 
 on:
-  pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
   check_version:
     name: Check Package Version
     runs-on: ubuntu-latest
+    outputs:
+      version_changed: ${{ steps.check_version.outputs.version_changed }}
 
     steps:
       # Step 1: Checkout repository
@@ -48,6 +52,7 @@ jobs:
           else
             echo "Version has not changed. Publishing will be skipped."
             echo "version_changed=false" >> $GITHUB_OUTPUT
+          fi
 
   publish:
     name: Build, Sign, and Publish to NuGet
@@ -64,19 +69,20 @@ jobs:
       # Step 6: Decode SNK File for signing
       - name: Decode SNK File
         shell: bash
-        run: echo "$SNK_FILE_BASE64" | base64 --decode > WordnikClientKey.snk
+        run: echo "$SNK_FILE_BASE64" | base64 --decode > ./src/Wordnik.Dotnet.Client/WordnikClientKey.snk
         env:
           SNK_FILE_BASE64: ${{ secrets.SNK_FILE_BASE64 }}
 
       # Step 7: Restore, Build, Sign, and Pack
       - name: Build, Sign, and Generate NuGet Package
         run: |
-          dotnet restore
-          dotnet build --configuration Release /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=WordnikClientKey.snk
-          dotnet pack --configuration Release /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=WordnikClientKey.snk
+          dotnet restore ./src/Wordnik.Dotnet.Client/Wordnik.Dotnet.Client.csproj
+          dotnet build --configuration Release /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=WordnikClientKey.snk ./src/Wordnik.Dotnet.Client/Wordnik.Dotnet.Client.csproj
 
       # Step 8: Publish to NuGet
       - name: Publish NuGet Package
-        run: dotnet nuget push bin/Release/*.nupkg --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
+        run: |
+          dotnet pack --configuration Release /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=WordnikClientKey.snk ./src/Wordnik.Dotnet.Client/Wordnik.Dotnet.Client.csproj
+          dotnet nuget push ./src/Wordnik.Dotnet.Client/bin/Release/*.nupkg --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
