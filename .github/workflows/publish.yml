@@ -10,6 +10,8 @@ jobs:
   check_version:
     name: Check Package Version
     runs-on: ubuntu-latest
+    outputs:
+      version_changed: ${{ steps.check_version.outputs.version_changed }}
 
     steps:
       # Step 1: Checkout repository
