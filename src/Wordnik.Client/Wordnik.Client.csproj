@@ -6,7 +6,7 @@
 
     <!-- NuGet package metadata -->
     <PackageId>Wordnik.Client</PackageId>
-    <Version>0.1.3</Version>
+    <Version>0.1.4</Version>
     <Authors>Artur Khutak</Authors>
     <Company>Arty_Prof</Company>
     <Description>Unofficial .NET client for the Wordnik API.</Description>
