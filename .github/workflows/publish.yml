@@ -2,8 +2,6 @@ name: Check Version Change, Sign, and Publish to NuGet
 
 on:
   pull_request:
-    # branches:
-    #   - main
 
 jobs:
   check_version:
