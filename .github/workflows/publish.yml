@@ -51,6 +51,7 @@ jobs:
           else
             echo "Version has not changed. Publishing will be skipped."
             echo "version_changed=false" >> $GITHUB_OUTPUT
+          fi
 
   publish:
     name: Build, Sign, and Publish to NuGet
