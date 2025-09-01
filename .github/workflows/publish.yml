@@ -21,7 +21,7 @@ jobs:
       - name: Extract Version from csproj
         id: extract_version
         run: |
-          CSProjFile="./src/Wordnik.Dotnet.Client/Wordnik.Dotnet.Client.csproj"
+          CSProjFile="./src/Wordnik.Client/Wordnik.Client.csproj"
           echo "Detected csproj file: $CSProjFile"
 
           CurrentVersion=$(grep -oPm1 "(?<=<Version>)[^<]+" "$CSProjFile")
@@ -37,7 +37,7 @@ jobs:
 
           PreviousCommit=$(git rev-parse origin/main^)
 
-          CSProjFile="./src/Wordnik.Dotnet.Client/Wordnik.Dotnet.Client.csproj"
+          CSProjFile="./src/Wordnik.Client/Wordnik.Client.csproj"
 
           PreviousVersion=$(git show $PreviousCommit:$CSProjFile | grep -oPm1 "(?<=<Version>)[^<]+")
 
@@ -72,20 +72,20 @@ jobs:
       # Step 6: Decode SNK File for signing
       - name: Decode SNK File
         shell: bash
-        run: echo "$SNK_FILE_BASE64" | base64 --decode > ./src/Wordnik.Dotnet.Client/WordnikClientKey.snk
+        run: echo "$SNK_FILE_BASE64" | base64 --decode > ./src/Wordnik.Client/WordnikClientKey.snk
         env:
           SNK_FILE_BASE64: ${{ secrets.SNK_FILE_BASE64 }}
 
       # Step 7: Restore, Build, Sign, and Pack
       - name: Build, Sign, and Generate NuGet Package
         run: |
-          dotnet restore ./src/Wordnik.Dotnet.Client/Wordnik.Dotnet.Client.csproj
-          dotnet build --configuration Release /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=WordnikClientKey.snk ./src/Wordnik.Dotnet.Client/Wordnik.Dotnet.Client.csproj
+          dotnet restore ./src/Wordnik.Client/Wordnik.Client.csproj
+          dotnet build --configuration Release /p:SignAssemblyCondition=true /p:AssemblyOriginatorKeyFile=WordnikClientKey.snk ./src/Wordnik.Client/Wordnik.Client.csproj
 
       # Step 8: Publish to NuGet
       - name: Publish NuGet Package
         run: |
-          dotnet pack --configuration Release /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=WordnikClientKey.snk ./src/Wordnik.Dotnet.Client/Wordnik.Dotnet.Client.csproj
-          dotnet nuget push ./src/Wordnik.Dotnet.Client/bin/Release/*.nupkg --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
+          dotnet pack --configuration Release /p:SignAssemblyCondition=true /p:AssemblyOriginatorKeyFile=WordnikClientKey.snk ./src/Wordnik.Client/Wordnik.Client.csproj
+          dotnet nuget push ./src/Wordnik.Client/bin/Release/*.nupkg --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
