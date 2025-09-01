@@ -70,7 +70,7 @@ jobs:
       # Step 6: Decode SNK File for signing
       - name: Decode SNK File
         shell: bash
-        run: echo "$SNK_FILE_BASE64" | base64 --decode > ./src/Wordnik.Dotnet.Client/WordnikClientKey.snk
+        run: echo "$SNK_FILE_BASE64" | base64 --decode > WordnikClientKey.snk
         env:
           SNK_FILE_BASE64: ${{ secrets.SNK_FILE_BASE64 }}
 
@@ -78,6 +78,7 @@ jobs:
       - name: Build, Sign, and Generate NuGet Package
         run: |
           dotnet restore
+          ls -al WordnikClientKey.snk
           dotnet build --configuration Release /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=WordnikClientKey.snk
           dotnet pack --configuration Release /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=WordnikClientKey.snk
 
