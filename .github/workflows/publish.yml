@@ -33,11 +33,14 @@ jobs:
       - name: Get Previous Version
         id: get_previous_version
         run: |
-          git fetch origin main --depth=1
+          git fetch origin main --depth=2
+
+          PreviousCommit=$(git rev-parse origin/main^)
 
           CSProjFile="./src/Wordnik.Dotnet.Client/Wordnik.Dotnet.Client.csproj"
 
-          PreviousVersion=$(git show origin/main:$CSProjFile | grep -oPm1 "(?<=<Version>)[^<]+")
+          PreviousVersion=$(git show $PreviousCommit:$CSProjFile | grep -oPm1 "(?<=<Version>)[^<]+")
+
           echo "Previous Version: $PreviousVersion"
 
           echo "previous_version=$PreviousVersion" >> $GITHUB_OUTPUT
