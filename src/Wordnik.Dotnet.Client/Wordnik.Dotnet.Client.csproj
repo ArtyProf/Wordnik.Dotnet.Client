@@ -18,7 +18,7 @@
 
     <!-- Signing -->
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>../../WordnikClientKey.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>WordnikClientKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
