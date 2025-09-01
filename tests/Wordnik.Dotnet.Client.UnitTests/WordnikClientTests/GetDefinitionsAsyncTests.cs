@@ -1,6 +1,7 @@
 ﻿using Moq;
 using Moq.Protected;
 using Newtonsoft.Json;
+using Wordnik.Dotnet.Client.Helpers;
 using Wordnik.Dotnet.Client.Models;
 using Wordnik.Dotnet.Client.Requests;
 
@@ -33,7 +34,7 @@ namespace Wordnik.Dotnet.Client.UnitTests.WordnikClientTests
 
             var httpClient = new HttpClient(mockHttpMessageHandler.Object)
             {
-                BaseAddress = new Uri("https://api.wordnik.com/v4/")
+                BaseAddress = new Uri(WordnikConstants.WordnikApiUrl)
             };
 
             var wordnikClient = new WordnikClient(httpClient, "fake_api_key");
@@ -58,7 +59,7 @@ namespace Wordnik.Dotnet.Client.UnitTests.WordnikClientTests
                     req =>
                         req.Method == HttpMethod.Get &&
                         req.RequestUri!.AbsoluteUri ==
-                        "https://api.wordnik.com/v4/word.json/example/definitions?limit=1&includeRelated=false&useCanonical=false&includeTags=false"
+                        $"{WordnikConstants.WordnikApiUrl}word.json/example/definitions?limit=1&includeRelated=false&useCanonical=false&includeTags=false"
                 ),
                 ItExpr.IsAny<CancellationToken>()
             );

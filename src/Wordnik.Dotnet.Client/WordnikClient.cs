@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Wordnik.Dotnet.Client.Helpers;
 using Wordnik.Dotnet.Client.Models;
 using Wordnik.Dotnet.Client.Requests;
 
@@ -12,8 +13,6 @@ namespace Wordnik.Dotnet.Client
     {
         private readonly HttpClient _httpClient;
 
-        private const string BaseUrl = "https://api.wordnik.com/v4";
-
         /// <summary>
         /// Initializes a new instance of the <see cref="WordnikClient"/> class.
         /// Use this constructor for Dependency Injection (DI).
@@ -21,16 +20,19 @@ namespace Wordnik.Dotnet.Client
         /// <param name="httpClient">An instance of HttpClient provided by Dependency Injection.</param>
         /// <param name="apiKey">Your Wordnik API key.</param>
         public WordnikClient(HttpClient httpClient, string apiKey)
-        {
-            if (string.IsNullOrWhiteSpace(apiKey))
-            {
-                throw new ArgumentException("API key cannot be null or empty.", nameof(apiKey));
-            }
-                
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+        {  
+            _httpClient = httpClient;
 
-            _httpClient.BaseAddress ??= new Uri(BaseUrl);
-            _httpClient.DefaultRequestHeaders.Add("api_key", apiKey);
+            _httpClient.BaseAddress ??= new Uri(WordnikConstants.WordnikApiUrl);
+            if (!_httpClient.DefaultRequestHeaders.Contains(WordnikConstants.WordnikApiKeyName))
+            {
+                if (string.IsNullOrWhiteSpace(apiKey))
+                {
+                    throw new ArgumentException("API key cannot be null or empty.", nameof(apiKey));
+                }
+
+                _httpClient.DefaultRequestHeaders.Add(WordnikConstants.WordnikApiKeyName, apiKey);
+            }
         }
 
         /// <inheritdoc />
