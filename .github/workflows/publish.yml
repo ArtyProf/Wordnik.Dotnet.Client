@@ -1,0 +1,84 @@
+name: Check Version Change, Sign, and Publish to NuGet
+
+on:
+  pull_request:
+    # branches:
+    #   - main
+
+jobs:
+  check_version:
+    name: Check Package Version
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Extract current package version from .csproj
+      - name: Extract Version from csproj
+        id: extract_version
+        run: |
+          CSProjFile=$(find . -name "*.csproj")
+          echo "Detected csproj file: $CSProjFile"
+
+          CurrentVersion=$(grep -oPm1 "(?<=<Version>)[^<]+" "$CSProjFile")
+          echo "Current Version: $CurrentVersion"
+          
+          echo "version=$CurrentVersion" >> $GITHUB_OUTPUT
+
+      # Step 3: Get the previous version from the main branch
+      - name: Get Previous Version
+        id: get_previous_version
+        run: |
+          git fetch origin main --depth=1
+
+          CSProjFile=$(find . -name "*.csproj")
+
+          PreviousVersion=$(git show origin/main:$CSProjFile | grep -oPm1 "(?<=<Version>)[^<]+")
+          echo "Previous Version: $PreviousVersion"
+
+          echo "previous_version=$PreviousVersion" >> $GITHUB_OUTPUT
+
+      # Step 4: Determine if there is a version change
+      - name: Check Version Change
+        id: check_version
+        run: |
+          if [ "${{ steps.extract_version.outputs.version }}" != "${{ steps.get_previous_version.outputs.previous_version }}" ]; then
+            echo "Version has changed! Proceeding with publishing..."
+            echo "version_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "Version has not changed. Publishing will be skipped."
+            echo "version_changed=false" >> $GITHUB_OUTPUT
+
+  publish:
+    name: Build, Sign, and Publish to NuGet
+    runs-on: ubuntu-latest
+    needs: check_version
+
+    if: ${{ needs.check_version.outputs.version_changed == 'true' }}
+
+    steps:
+      # Step 5: Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 6: Decode SNK File for signing
+      - name: Decode SNK File
+        shell: bash
+        run: echo "$SNK_FILE_BASE64" | base64 --decode > WordnikClientKey.snk
+        env:
+          SNK_FILE_BASE64: ${{ secrets.SNK_FILE_BASE64 }}
+
+      # Step 7: Restore, Build, Sign, and Pack
+      - name: Build, Sign, and Generate NuGet Package
+        run: |
+          dotnet restore
+          dotnet build --configuration Release /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=WordnikClientKey.snk
+          dotnet pack --configuration Release /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=WordnikClientKey.snk
+
+      # Step 8: Publish to NuGet
+      - name: Publish NuGet Package
+        run: dotnet nuget push bin/Release/*.nupkg --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
