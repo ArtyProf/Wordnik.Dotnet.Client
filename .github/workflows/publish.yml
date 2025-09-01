@@ -19,7 +19,7 @@ jobs:
       - name: Extract Version from csproj
         id: extract_version
         run: |
-          CSProjFile=$(find . -name "*.csproj")
+          CSProjFile="./src/Wordnik.Dotnet.Client/Wordnik.Dotnet.Client.csproj"
           echo "Detected csproj file: $CSProjFile"
 
           CurrentVersion=$(grep -oPm1 "(?<=<Version>)[^<]+" "$CSProjFile")
@@ -33,7 +33,7 @@ jobs:
         run: |
           git fetch origin main --depth=1
 
-          CSProjFile=$(find . -name "*.csproj")
+          CSProjFile="./src/Wordnik.Dotnet.Client/Wordnik.Dotnet.Client.csproj"
 
           PreviousVersion=$(git show origin/main:$CSProjFile | grep -oPm1 "(?<=<Version>)[^<]+")
           echo "Previous Version: $PreviousVersion"
