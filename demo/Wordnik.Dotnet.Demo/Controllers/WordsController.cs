@@ -17,7 +17,7 @@ public class WordsController : ControllerBase
     }
 
     [HttpGet("definitions")]
-    public async Task<ActionResult<IEnumerable<DefinitionResponse>>> GetDefinitions(GetDefinitionsRequest request)
+    public async Task<ActionResult<IEnumerable<DefinitionResponse>>> GetDefinitions([FromQuery] GetDefinitionsRequest request)
     {
         if (request == null)
         {

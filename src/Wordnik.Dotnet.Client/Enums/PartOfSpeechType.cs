@@ -7,7 +7,6 @@ namespace Wordnik.Dotnet.Client.Enums
     /// </summary>
     public enum PartOfSpeechType
     {
-        [Display(Name = "")] None,
         [Display(Name = "noun")] Noun,
         [Display(Name = "adjective")] Adjective,
         [Display(Name = "verb")] Verb,
