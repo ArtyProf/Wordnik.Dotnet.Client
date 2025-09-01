@@ -1,6 +1,9 @@
 name: Check Version Change, Sign, and Publish to NuGet
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
 
 jobs:
