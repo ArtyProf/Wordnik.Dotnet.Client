@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Options;
+using Wordnik.Client;
 using Wordnik.Demo.Helpers;
-using Wordnik.Dotnet.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 

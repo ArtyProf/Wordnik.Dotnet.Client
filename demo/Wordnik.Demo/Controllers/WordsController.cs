@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Wordnik.Dotnet.Client;
-using Wordnik.Dotnet.Client.Models;
-using Wordnik.Dotnet.Client.Requests;
+using Wordnik.Client;
+using Wordnik.Client.Requests;
+using Wordnik.Client.Responses;
 
 namespace Wordnik.Demo.Controllers;
 
