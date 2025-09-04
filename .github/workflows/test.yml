@@ -26,6 +26,8 @@ jobs:
         with:
           dotnet-version: 8.0 
 
+      - name: Debug directory structure
+        run: ls -R
       # Step 3: Restore dependencies for all projects
       - name: Restore dependencies
         run: dotnet restore ./Wordnik.Client.sln
