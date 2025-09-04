@@ -39,4 +39,28 @@ public class WordsController : ControllerBase
             return StatusCode(500, $"An unexpected error occurred: {ex.Message}");
         }
     }
+
+    [HttpGet("examples")]
+    public async Task<ActionResult<ExamplesResponse>> GetExamples([FromQuery] GetExamplesRequest request)
+    {
+        if (request == null)
+        {
+            return BadRequest("The request is required.");
+        }
+
+        try
+        {
+            var definitions = await _wordnikClient.GetExamplesAsync(request);
+
+            return Ok(definitions);
+        }
+        catch (HttpRequestException ex)
+        {
+            return StatusCode(500, $"Error communicating with Wordnik API: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"An unexpected error occurred: {ex.Message}");
+        }
+    }
 }

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wordnik.Demo", "Demo\Wordni
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wordnik.Client.UnitTests", "Tests\Wordnik.Client.UnitTests\Wordnik.Client.UnitTests.csproj", "{243F3F59-1A18-EEA5-D831-326E58931146}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wordnik.Client.IntegrationTests", "Tests\Wordnik.Client.IntegrationTests\Wordnik.Client.IntegrationTests.csproj", "{0BD068F0-5656-45BF-A32C-A1A3D3231111}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{243F3F59-1A18-EEA5-D831-326E58931146}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{243F3F59-1A18-EEA5-D831-326E58931146}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{243F3F59-1A18-EEA5-D831-326E58931146}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BD068F0-5656-45BF-A32C-A1A3D3231111}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BD068F0-5656-45BF-A32C-A1A3D3231111}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BD068F0-5656-45BF-A32C-A1A3D3231111}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BD068F0-5656-45BF-A32C-A1A3D3231111}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

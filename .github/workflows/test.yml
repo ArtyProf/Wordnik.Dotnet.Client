@@ -1,0 +1,42 @@
+name: Test library
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up .NET SDK
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0 
+
+      # Step 3: Restore dependencies for all projects
+      - name: Restore dependencies
+        run: dotnet restore ./Wordnik.Client.sln
+
+      # Step 4: Build the entire solution, including both test projects
+      - name: Build solution
+        run: dotnet build ./Wordnik.Client.sln --no-restore
+
+      # Step 5: Run Unit Tests
+      - name: Run Unit Tests
+        run: dotnet test Tests/Wordnik.Client.UnitTests/Wordnik.Client.UnitTests.csproj --no-build
+
+      # Step 6: Run Integration Tests
+      - name: Run Integration Tests
+        env:
+          Wordnik__ApiKey: ${{ secrets.WORDNIK_API_KEY }}
+        run: dotnet test Tests/Wordnik.Client.IntegrationTests/Wordnik.Client.IntegrationTests.csproj --no-build
