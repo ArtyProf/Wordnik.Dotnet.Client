@@ -17,7 +17,7 @@ jobs:
 
       # Step 2: Decode SNK File for signing
       - name: Decode SNK File
-        run: echo "$SNK_FILE_BASE64" | base64 --decode > ./src/Wordnik.Client/WordnikClientKey.snk
+        run: echo "$SNK_FILE_BASE64" | base64 --decode > ./Wordnik.Client/WordnikClientKey.snk
         env:
           SNK_FILE_BASE64: ${{ secrets.SNK_FILE_BASE64 }}
 
@@ -28,16 +28,16 @@ jobs:
           VERSION=${TAG_NAME#v}
           echo "Extracted VERSION: $VERSION"
 
-          dotnet restore ./src/Wordnik.Client/Wordnik.Client.csproj
-          dotnet build --configuration Release /p:SignAssemblyCondition=true /p:AssemblyOriginatorKeyFile=WordnikClientKey.snk ./src/Wordnik.Client/Wordnik.Client.csproj
-          dotnet pack --configuration Release ./src/Wordnik.Client/Wordnik.Client.csproj \
+          dotnet restore ./Wordnik.Client/Wordnik.Client.csproj
+          dotnet build --configuration Release /p:SignAssemblyCondition=true /p:AssemblyOriginatorKeyFile=WordnikClientKey.snk ./Wordnik.Client/Wordnik.Client.csproj
+          dotnet pack --configuration Release ./Wordnik.Client/Wordnik.Client.csproj \
             /p:Version="$VERSION" \
             /p:ReleaseNotes="${{ github.event.release.body }}"
 
       # Step 4: Publish to NuGet
       - name: Publish to NuGet
         run: |
-          dotnet nuget push ./src/Wordnik.Client/bin/Release/*.nupkg \
+          dotnet nuget push ./Wordnik.Client/bin/Release/*.nupkg \
             --source "https://api.nuget.org/v3/index.json" \
             --api-key "${{ secrets.NUGET_API_KEY }}"
         env:

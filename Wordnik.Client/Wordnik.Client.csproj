@@ -14,7 +14,7 @@
     <PackageProjectUrl>https://github.com/ArtyProf/Wordnik.Client</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ArtyProf/Wordnik.Client</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>dotnet net csharp wordnik dictionary thesaurus</PackageTags>
+    <PackageTags>dotnet net csharp wordnik dictionary thesaurus word words</PackageTags>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
 	<PackageReleaseNotes>$(ReleaseNotes)</PackageReleaseNotes>
 	  

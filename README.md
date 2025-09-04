@@ -1,12 +1,16 @@
 # Wordnik.Client
 
-**Wordnik.Client** is a .NET client library for interacting with the Wordnik API.
+**Wordnik.Client** is a .NET client library for interacting with the [Wordnik API](https://wordnik.com/).
 
 ## Features
 
-- Fetch word definitions programmatically.
 - Seamless and easy-to-use API integration.
 - Built for .NET Standard 2.1, enabling cross-platform support.
+
+## Implemented Wordnik APIs
+
+- definitions
+- examples
 
 ## Installation
 
