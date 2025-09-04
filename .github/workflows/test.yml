@@ -5,8 +5,6 @@ on:
     branches:
       - main
   pull_request:
-    branches:
-      - main
 
 jobs:
   build-and-test:
@@ -31,11 +29,39 @@ jobs:
       - name: Build solution
         run: dotnet build ./Wordnik.Client.sln --no-restore
 
-      # Step 5: Run Unit Tests
-      - name: Run Unit Tests
-        run: dotnet test Tests/Wordnik.Client.UnitTests/Wordnik.Client.UnitTests.csproj --no-build
+      # Step 5: Install SonarCloud Scanner
+      - name: Install SonarCloud Scanner
+        run: dotnet tool install --global dotnet-sonarscanner
 
-      # Step 6: Run Integration Tests
+      # Step 6: Start SonarCloud Analysis
+      - name: Start SonarCloud Analysis
+        run: |
+          dotnet-sonarscanner begin /k:"${{ secrets.SONAR_PROJECT }}" /d:sonar.organization="${{ secrets.SONAR_OWNER }}" \
+          /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
+          /d:sonar.sources="src/Wordnik.Client" \
+          /d:sonar.exclusions="Demo/**,Tests/Wordnik.Client.IntegrationTests/**" \
+          /d:sonar.tests="Tests/Wordnik.Client.UnitTests" \
+          /d:sonar.test.exclusions="Tests/Wordnik.Client.IntegrationTests/**" \
+          /d:sonar.cs.vscoveragexml.reportsPaths="Tests/Wordnik.Client.UnitTests/coverage.opencover.xml" \
+          /d:sonar.coverageReportPaths="Tests/Wordnik.Client.UnitTests/coverage.opencover.xml"
+
+      # Step 7: Build the Wordnik.Client project
+      - name: Build Wordnik.Client
+        run: dotnet build src/Wordnik.Client/Wordnik.Client.csproj --no-restore
+
+      # Step 8: Run Unit Tests with Coverage
+      - name: Run Unit Tests
+        run: |
+          dotnet test Tests/Wordnik.Client.UnitTests/Wordnik.Client.UnitTests.csproj \
+          --no-build --collect:"XPlat Code Coverage" --results-directory Tests/Wordnik.Client.UnitTests/
+
+      # Step 9: Complete SonarCloud Analysis
+      - name: End SonarCloud Analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+
+      # Step 10: Run Integration Tests
       - name: Run Integration Tests
         env:
           Wordnik__ApiKey: ${{ secrets.WORDNIK_API_KEY }}
