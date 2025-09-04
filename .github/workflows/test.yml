@@ -40,8 +40,7 @@ jobs:
           /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
           /d:sonar.exclusions="Demo/**,Tests/Wordnik.Client.IntegrationTests/**" \
           /d:sonar.test.exclusions="Tests/Wordnik.Client.IntegrationTests/**" \
-          /d:sonar.cs.vscoveragexml.reportsPaths="../coverage.opencover.xml" \
-          /d:sonar.coverageReportPaths="../coverage.opencover.xml"
+          /d:sonar.coverageReportPaths="../coverage.cobertura.xml"
 
       # Step 7: Build the Wordnik.Client project
       - name: Build Wordnik.Client
