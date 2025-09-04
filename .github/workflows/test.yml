@@ -31,7 +31,9 @@ jobs:
 
       # Step 5: Install SonarCloud Scanner
       - name: Install SonarCloud Scanner
-        run: dotnet tool install --global dotnet-sonarscanner
+        run: |
+          dotnet tool install --global dotnet-sonarscanner
+          dotnet tool install --global dotnet-coverage
 
       # Step 6: Start SonarCloud Analysis
       - name: Start SonarCloud Analysis
@@ -41,11 +43,7 @@ jobs:
           /d:sonar.host.url="https://sonarcloud.io" \
           /d:sonar.exclusions="Demo/**,Tests/Wordnik.Client.IntegrationTests/**" \
           /d:sonar.test.exclusions="Tests/Wordnik.Client.IntegrationTests/**" \
-          /d:sonar.cs.opencover.reportsPaths="./Tests/Wordnik.Client.UnitTests/coverage.opencover.xml" \
-          /d:sonar.pullrequest.key="${{ github.event.pull_request.number }}" \
-          /d:sonar.pullrequest.base="${{ github.event.pull_request.base.ref }}" \
-          /d:sonar.pullrequest.branch="${{ github.head_ref }}" \
-          /d:sonar.pullrequest.github.repository="${{ github.repository }}"
+          /d:sonar.cs.opencover.reportsPaths="./Tests/Wordnik.Client.UnitTests/coverage.opencover.xml"
 
       # Step 7: Build the Wordnik.Client project
       - name: Build Wordnik.Client
@@ -54,8 +52,7 @@ jobs:
       # Step 8: Run Unit Tests with Coverage
       - name: Run Unit Tests
         run: |
-          dotnet test Tests/Wordnik.Client.UnitTests/Wordnik.Client.UnitTests.csproj \
-          --no-build --blame /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput="./Tests/Wordnik.Client.UnitTests/coverage.opencover.xml"
+          dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
 
       # Step 9: Complete SonarCloud Analysis
       - name: End SonarCloud Analysis
