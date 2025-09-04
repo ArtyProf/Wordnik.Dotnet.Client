@@ -47,12 +47,13 @@ jobs:
 
       # Step 7: Build the Wordnik.Client project
       - name: Build Wordnik.Client
-        run: dotnet build ./Wordnik.Client/Wordnik.Client.csproj --no-restore
+        run: dotnet build ./Wordnik.Client/Wordnik.Client.csproj --no-restore --no-incremental
 
       # Step 8: Run Unit Tests with Coverage
       - name: Run Unit Tests
         run: |
           dotnet-coverage collect "dotnet test Tests/Wordnik.Client.UnitTests/Wordnik.Client.UnitTests.csproj" -f xml -o "coverage.xml"
+          ls -a
 
       # Step 9: Complete SonarCloud Analysis
       - name: End SonarCloud Analysis
