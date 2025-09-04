@@ -43,7 +43,7 @@ jobs:
           /d:sonar.host.url="https://sonarcloud.io" \
           /d:sonar.exclusions="Demo/**,Tests/Wordnik.Client.IntegrationTests/**" \
           /d:sonar.test.exclusions="Tests/Wordnik.Client.IntegrationTests/**" \
-          /d:sonar.cs.vscoveragexml.reportsPaths="./Tests/Wordnik.Client.UnitTests/coverage.xml"
+          /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml"
 
       # Step 7: Build the Wordnik.Client project
       - name: Build Wordnik.Client
