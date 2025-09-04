@@ -8,7 +8,7 @@ namespace Wordnik.Client.Requests
     /// <summary>
     /// Request model for retrieving definitions from the Wordnik API.
     /// </summary>
-    public class GetDefinitionsRequest
+    public class GetDefinitionsRequest : IWord
     {
         /// <summary>
         /// The word to retrieve definitions for.

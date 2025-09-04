@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Wordnik.Client\Wordnik.Client.csproj" />
+    <ProjectReference Include="..\..\Wordnik.Client\Wordnik.Client.csproj" />
   </ItemGroup>
 
   <ItemGroup>
