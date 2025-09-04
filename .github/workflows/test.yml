@@ -39,7 +39,8 @@ jobs:
           dotnet-sonarscanner begin /k:"${{ secrets.SONAR_PROJECT }}" /o:"${{ secrets.SONAR_OWNER }}" \
           /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
           /d:sonar.exclusions="Demo/**,Tests/Wordnik.Client.IntegrationTests/**" \
-          /d:sonar.test.exclusions="Tests/Wordnik.Client.IntegrationTests/**"
+          /d:sonar.test.exclusions="Tests/Wordnik.Client.IntegrationTests/**" \
+          /d:sonar.coverageReportPaths="coverage-results/coverage.cobertura.xml"
 
       # Step 7: Build the Wordnik.Client project
       - name: Build Wordnik.Client
@@ -54,15 +55,12 @@ jobs:
       # Step 9: Locate coverage report file
       - name: Locate Coverage Report
         run: |
-          COVERAGE_PATH=$(find ./coverage-results -name "coverage.cobertura.xml")
-          echo "Coverage report detected at: $COVERAGE_PATH"
-          echo "coverage_path=$COVERAGE_PATH" >> $GITHUB_ENV
+          mv $(find ./coverage-results -name "coverage.cobertura.xml") ./coverage-results/coverage.cobertura.xml
 
       # Step 10: Complete SonarCloud Analysis
       - name: End SonarCloud Analysis
         run: |
-          dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
-          /d:sonar.coverageReportPaths="$coverage_path"
+          dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
       # Step 11: Run Integration Tests
       - name: Run Integration Tests
