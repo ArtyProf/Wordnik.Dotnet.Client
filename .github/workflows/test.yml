@@ -59,7 +59,6 @@ jobs:
       - name: Run Unit Tests
         run: |
           dotnet-coverage collect "dotnet test Tests/Wordnik.Client.UnitTests/Wordnik.Client.UnitTests.csproj" -f xml -o "coverage.xml"
-          ls -a
 
       # Step 9: Complete SonarCloud Analysis
       - name: End SonarCloud Analysis
