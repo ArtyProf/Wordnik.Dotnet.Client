@@ -43,7 +43,7 @@ jobs:
           /d:sonar.host.url="https://sonarcloud.io" \
           /d:sonar.exclusions="Demo/**,Tests/Wordnik.Client.IntegrationTests/**" \
           /d:sonar.test.exclusions="Tests/Wordnik.Client.IntegrationTests/**" \
-          /d:sonar.cs.opencover.reportsPaths="./Tests/Wordnik.Client.UnitTests/coverage.opencover.xml"
+          /d:sonar.cs.vscoveragexml.reportsPaths="./Tests/Wordnik.Client.UnitTests/coverage.xml"
 
       # Step 7: Build the Wordnik.Client project
       - name: Build Wordnik.Client
@@ -52,7 +52,7 @@ jobs:
       # Step 8: Run Unit Tests with Coverage
       - name: Run Unit Tests
         run: |
-          dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
+          dotnet-coverage collect "dotnet test Tests/Wordnik.Client.UnitTests/Wordnik.Client.UnitTests.csproj" -f xml -o "coverage.xml"
 
       # Step 9: Complete SonarCloud Analysis
       - name: End SonarCloud Analysis
