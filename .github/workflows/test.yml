@@ -12,9 +12,6 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
-    env:
-      WORDNIK_API_KEY: ${{ secrets.WORDNIK_API_KEY }}
-
     steps:
       # Step 1: Check out the repository
       - name: Checkout repository
