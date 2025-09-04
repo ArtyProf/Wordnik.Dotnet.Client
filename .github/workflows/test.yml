@@ -40,4 +40,6 @@ jobs:
 
       # Step 6: Run Integration Tests
       - name: Run Integration Tests
+        env:
+          Wordnik__ApiKey: ${{ secrets.WORDNIK_API_KEY }}
         run: dotnet test Tests/Wordnik.Client.IntegrationTests/Wordnik.Client.IntegrationTests.csproj --no-build
