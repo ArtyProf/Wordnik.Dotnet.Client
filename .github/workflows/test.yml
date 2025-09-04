@@ -40,7 +40,7 @@ jobs:
           /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
           /d:sonar.exclusions="Demo/**,Tests/Wordnik.Client.IntegrationTests/**" \
           /d:sonar.test.exclusions="Tests/Wordnik.Client.IntegrationTests/**" \
-          /d:sonar.cs.opencover.reportsPaths="./Tests/Wordnik.Client.UnitTests/coverage.opencover.xml \
+          /d:sonar.cs.opencover.reportsPaths="./Tests/Wordnik.Client.UnitTests/coverage.opencover.xml" \
           /d:sonar.pullrequest.key="${{ github.event.pull_request.number }}" \
           /d:sonar.pullrequest.base="${{ github.event.pull_request.base.ref }}" \
           /d:sonar.pullrequest.branch="${{ github.head_ref }}" \
