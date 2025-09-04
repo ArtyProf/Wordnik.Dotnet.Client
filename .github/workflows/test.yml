@@ -38,16 +38,14 @@ jobs:
         run: |
           dotnet-sonarscanner begin /k:"${{ secrets.SONAR_PROJECT }}" /o:"${{ secrets.SONAR_OWNER }}" \
           /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
-          /d:sonar.sources="src/Wordnik.Client" \
           /d:sonar.exclusions="Demo/**,Tests/Wordnik.Client.IntegrationTests/**" \
-          /d:sonar.tests="Tests/Wordnik.Client.UnitTests" \
           /d:sonar.test.exclusions="Tests/Wordnik.Client.IntegrationTests/**" \
           /d:sonar.cs.vscoveragexml.reportsPaths="Tests/Wordnik.Client.UnitTests/coverage.opencover.xml" \
           /d:sonar.coverageReportPaths="Tests/Wordnik.Client.UnitTests/coverage.opencover.xml"
 
       # Step 7: Build the Wordnik.Client project
       - name: Build Wordnik.Client
-        run: dotnet build src/Wordnik.Client/Wordnik.Client.csproj --no-restore
+        run: dotnet build ./Wordnik.Client/Wordnik.Client.csproj --no-restore
 
       # Step 8: Run Unit Tests with Coverage
       - name: Run Unit Tests
