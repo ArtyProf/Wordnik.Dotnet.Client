@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36310.24
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wordnik.Client", "src\Wordnik.Client\Wordnik.Client.csproj", "{7E297FEF-B806-0B7C-7614-79953F6780BB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wordnik.Client", "Wordnik.Client\Wordnik.Client.csproj", "{7E297FEF-B806-0B7C-7614-79953F6780BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wordnik.Demo", "demo\Wordnik.Demo\Wordnik.Demo.csproj", "{9218181A-1681-592A-C8C1-12EC7F8B0F34}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wordnik.Demo", "Demo\Wordnik.Demo.csproj", "{9218181A-1681-592A-C8C1-12EC7F8B0F34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wordnik.Client.UnitTests", "tests\Wordnik.Client.UnitTests\Wordnik.Client.UnitTests.csproj", "{243F3F59-1A18-EEA5-D831-326E58931146}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wordnik.Client.UnitTests", "Tests\Wordnik.Client.UnitTests\Wordnik.Client.UnitTests.csproj", "{243F3F59-1A18-EEA5-D831-326E58931146}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
