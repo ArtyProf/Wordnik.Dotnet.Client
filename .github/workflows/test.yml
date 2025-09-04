@@ -28,11 +28,11 @@ jobs:
 
       # Step 3: Restore dependencies for all projects
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore Wordnik.Client.sln
 
       # Step 4: Build the entire solution, including both test projects
       - name: Build solution
-        run: dotnet build --no-restore
+        run: dotnet build Wordnik.Client.sln --no-restore
 
       # Step 5: Run Unit Tests
       - name: Run Unit Tests
