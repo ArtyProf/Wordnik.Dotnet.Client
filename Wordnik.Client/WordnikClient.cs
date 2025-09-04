@@ -63,7 +63,6 @@ namespace Wordnik.Client
             var url = $"word.json/{Uri.EscapeDataString(request.Word)}/{apiPath}?{request}";
 
             var response = await _httpClient.GetAsync(url);
-
             if (!response.IsSuccessStatusCode)
             {
                 throw new HttpRequestException($"Request failed with status code {response.StatusCode}: {response.ReasonPhrase}");
