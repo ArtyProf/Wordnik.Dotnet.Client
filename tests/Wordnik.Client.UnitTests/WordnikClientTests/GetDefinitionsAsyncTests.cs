@@ -1,209 +1,101 @@
-﻿using Moq;
-using Moq.Protected;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Net;
 using Wordnik.Client.Helpers;
 using Wordnik.Client.Requests;
 using Wordnik.Client.Responses;
 
-namespace Wordnik.Client.UnitTests.WordnikClientTests
+namespace Wordnik.Client.UnitTests.WordnikClientTests;
+
+public class GetDefinitionsAsyncTests
 {
-    public class GetDefinitionsAsyncTests
+    [Fact]
+    public async Task GetDefinitionsAsync_ShouldConstructCorrectUrlAndReturnData()
     {
-        [Fact]
-        public async Task GetDefinitionsAsync_ShouldConstructCorrectUrlAndReturnData()
+        var responseContent = JsonConvert.SerializeObject(new List<DefinitionResponse>
         {
-            // Arrange
-            var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
+            new() { Text = "A representative form or pattern." }
+        });
 
-            var responseContent = JsonConvert.SerializeObject(new List<DefinitionResponse>
+        var request = new GetDefinitionsRequest { Word = "example", Limit = 1 };
+        var expectedUrl = $"{WordnikConstants.WordnikApiUrl}word.json/example/definitions?{request}";
+
+        await WordnikTestHelper.RunGenericApiMethodTest(
+            mockResponseContent: responseContent,
+            expectedUrl: expectedUrl,
+            apiMethod: (client, req) => client.GetDefinitionsAsync(req),
+            request: request,
+            assertions: response =>
             {
-                new() { Text = "A representative form or pattern." }
+                Assert.NotNull(response);
+                Assert.Single(response);
+                Assert.Equal("A representative form or pattern.", response.First().Text);
             });
+    }
 
-            mockHttpMessageHandler.Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.IsAny<HttpRequestMessage>(),
-                    ItExpr.IsAny<CancellationToken>()
-                )
-                .ReturnsAsync(new HttpResponseMessage
-                {
-                    StatusCode = System.Net.HttpStatusCode.OK,
-                    Content = new StringContent(responseContent)
-                });
+    [Fact]
+    public async Task GetDefinitionsAsync_RequestIsNull_ShouldThrowArgumentNullException()
+    {
+        await WordnikTestHelper.RunNullRequestTest<GetDefinitionsRequest>(
+            (client, req) => client.GetDefinitionsAsync(req),
+            "request");
+    }
 
-            var httpClient = new HttpClient(mockHttpMessageHandler.Object)
-            {
-                BaseAddress = new Uri(WordnikConstants.WordnikApiUrl)
-            };
-
-            var wordnikClient = new WordnikClient(httpClient, "fake_api_key");
-
-            var request = new GetDefinitionsRequest
-            {
-                Word = "example",
-                Limit = 1
-            };
-
-            // Act
-            var result = await wordnikClient.GetDefinitionsAsync(request);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Single(result);
-            Assert.Equal("A representative form or pattern.", result.First().Text);
-            mockHttpMessageHandler.Protected().Verify(
-                "SendAsync",
-                Times.Once(),
-                ItExpr.Is<HttpRequestMessage>(
-                    req =>
-                        req.Method == HttpMethod.Get &&
-                        req.RequestUri!.AbsoluteUri ==
-                        $"{WordnikConstants.WordnikApiUrl}word.json/example/definitions?{request}"
-                ),
-                ItExpr.IsAny<CancellationToken>()
-            );
-        }
-
-        [Fact]
-        public async Task GetDefinitionsAsync_RequestIsNull_ShouldThrowArgumentNullException()
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData(" ")]
+    public async Task GetDefinitionsAsync_RequestWordIsInvalid_ShouldThrowArgumentException(string word)
+    {
+        var request = new GetDefinitionsRequest
         {
-            // Arrange
-            var httpClient = new HttpClient();
-            var wordnikClient = new WordnikClient(httpClient, "fake_api_key");
+            Word = word
+        };
 
-            // Act & Assert
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => wordnikClient.GetDefinitionsAsync(null));
+        await WordnikTestHelper.RunInvalidWordValidationTest(
+            (client, req) => client.GetDefinitionsAsync(req),
+            request,
+            "Word",
+            "Word cannot be null or empty.");
+    }
 
-            Assert.Equal("request", exception.ParamName);
-        }
+    [Fact]
+    public async Task GetDefinitionsAsync_HttpResponseIsNotSuccess_ShouldThrowHttpRequestException()
+    {
+        var request = new GetDefinitionsRequest { Word = "example" };
+        var expectedUrl = $"{WordnikConstants.WordnikApiUrl}word.json/example/definitions?{request}";
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData(" ")]
-        public async Task GetDefinitionsAsync_RequestWordIsInvalid_ShouldThrowArgumentException(string word)
-        {
-            // Arrange
-            var httpClient = new HttpClient();
-            var wordnikClient = new WordnikClient(httpClient, "fake_api_key");
+        await WordnikTestHelper.RunHttpFailureTest(
+            statusCode: HttpStatusCode.BadRequest,
+            reasonPhrase: "Bad Request",
+            expectedUrl: expectedUrl,
+            apiMethod: (client, req) => client.GetDefinitionsAsync(req),
+            request: request);
+    }
 
-            var request = new GetDefinitionsRequest
-            {
-                Word = word
-            };
+    [Fact]
+    public async Task GetDefinitionsAsync_InvalidJsonResponse_ShouldThrowJsonSerializationException()
+    {
+        var malformedJson = "{ invalid json }";
+        var request = new GetDefinitionsRequest { Word = "example" };
 
-            // Act & Assert
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() => wordnikClient.GetDefinitionsAsync(request));
+        await WordnikTestHelper.RunMalformedJsonTest<GetDefinitionsRequest, JsonReaderException>(
+            malformedJson,
+            (client, req) => client.GetDefinitionsAsync(req),
+            request,
+            "Invalid character after parsing property"
+        );
+    }
 
-            Assert.Equal("Word", exception.ParamName);
-            Assert.Contains("Word cannot be null or empty.", exception.Message);
-        }
+    [Fact]
+    public async Task GetDefinitionsAsync_HttpClientThrowsException_ShouldPropagateException()
+    {
+        var request = new GetDefinitionsRequest { Word = "example" };
 
-        [Fact]
-        public async Task GetDefinitionsAsync_HttpResponseIsNotSuccess_ShouldThrowHttpRequestException()
-        {
-            // Arrange
-            var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
-
-            mockHttpMessageHandler.Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.IsAny<HttpRequestMessage>(),
-                    ItExpr.IsAny<CancellationToken>()
-                )
-                .ReturnsAsync(new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.BadRequest,
-                    ReasonPhrase = "Bad Request"
-                });
-
-            var httpClient = new HttpClient(mockHttpMessageHandler.Object)
-            {
-                BaseAddress = new Uri(WordnikConstants.WordnikApiUrl)
-            };
-
-            var wordnikClient = new WordnikClient(httpClient, "fake_api_key");
-
-            var request = new GetDefinitionsRequest
-            {
-                Word = "example"
-            };
-
-            // Act & Assert
-            var exception = await Assert.ThrowsAsync<HttpRequestException>(() => wordnikClient.GetDefinitionsAsync(request));
-
-            Assert.Contains("Request failed with status code BadRequest", exception.Message);
-        }
-
-        [Fact]
-        public async Task GetDefinitionsAsync_InvalidJsonResponse_ShouldThrowJsonSerializationException()
-        {
-            // Arrange
-            var malformedJson = "{ invalid json }";
-
-            var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
-            mockHttpMessageHandler.Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.IsAny<HttpRequestMessage>(),
-                    ItExpr.IsAny<CancellationToken>()
-                )
-                .ReturnsAsync(new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent(malformedJson)
-                });
-
-            var httpClient = new HttpClient(mockHttpMessageHandler.Object)
-            {
-                BaseAddress = new Uri(WordnikConstants.WordnikApiUrl)
-            };
-
-            var wordnikClient = new WordnikClient(httpClient, "fake_api_key");
-
-            var request = new GetDefinitionsRequest
-            {
-                Word = "example"
-            };
-
-            // Act & Assert
-            var exception = await Assert.ThrowsAsync<JsonReaderException>(() => wordnikClient.GetDefinitionsAsync(request));
-
-            Assert.Contains("Invalid character after parsing property", exception.Message, StringComparison.OrdinalIgnoreCase);
-        }
-
-        [Fact]
-        public async Task GetDefinitionsAsync_HttpClientThrowsException_ShouldPropagateException()
-        {
-            // Arrange
-            var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
-
-            mockHttpMessageHandler.Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.IsAny<HttpRequestMessage>(),
-                    ItExpr.IsAny<CancellationToken>()
-                )
-                .ThrowsAsync(new InvalidOperationException("A test exception during HTTP processing"));
-
-            var httpClient = new HttpClient(mockHttpMessageHandler.Object)
-            {
-                BaseAddress = new Uri(WordnikConstants.WordnikApiUrl)
-            };
-
-            var wordnikClient = new WordnikClient(httpClient, "fake_api_key");
-
-            var request = new GetDefinitionsRequest
-            {
-                Word = "example"
-            };
-
-            // Act & Assert
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => wordnikClient.GetDefinitionsAsync(request));
-
-            Assert.Equal("A test exception during HTTP processing", exception.Message);
-        }
+        await WordnikTestHelper.RunHttpClientExceptionPropagationTest<GetDefinitionsRequest, InvalidOperationException>(
+            new InvalidOperationException("A test exception during HTTP processing"),
+            (client, req) => client.GetDefinitionsAsync(req),
+            request,
+            "A test exception during HTTP processing"
+        );
     }
 }

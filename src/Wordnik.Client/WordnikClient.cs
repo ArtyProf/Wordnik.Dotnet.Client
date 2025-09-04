@@ -9,6 +9,9 @@ using Wordnik.Client.Responses;
 
 namespace Wordnik.Client
 {
+    /// <summary>
+    /// A client for interacting with the Wordnik API, providing methods to word-related operations.
+    /// </summary>
     public class WordnikClient : IWordnikClient
     {
         private readonly HttpClient _httpClient;
@@ -35,12 +38,21 @@ namespace Wordnik.Client
             }
         }
 
-        /// <inheritdoc />
-        public async Task<IEnumerable<DefinitionResponse>> GetDefinitionsAsync(GetDefinitionsRequest request)
+        /// <summary>
+        /// Constructs and validates the request, sends an HTTP GET request, and returns the deserialized response.
+        /// Includes validation for requests implementing <see cref="IWord"/> to ensure the `Word` property is not null or empty.
+        /// </summary>
+        /// <typeparam name="TRequest">The type of the request implementing <see cref="IWord"/>, if applicable.</typeparam>
+        /// <typeparam name="TResponse">The type to deserialize the response into.</typeparam>
+        /// <param name="apiPath">The relative URL path template.</param>
+        /// <param name="request">The request object containing query parameter and path placeholder values.</param>
+        /// <returns>A <see cref="Task"/> containing the deserialized HTTP response.</returns>
+        private async Task<TResponse> SendRequestAsync<TRequest, TResponse>(string apiPath, TRequest request)
+            where TRequest : IWord
         {
             if (request == null)
             {
-                throw new ArgumentNullException(nameof(request));
+                throw new ArgumentNullException(nameof(request), "Request object cannot be null.");
             }
 
             if (string.IsNullOrWhiteSpace(request.Word))
@@ -48,17 +60,35 @@ namespace Wordnik.Client
                 throw new ArgumentException("Word cannot be null or empty.", nameof(request.Word));
             }
 
-            var url = $"word.json/{Uri.EscapeDataString(request.Word)}/definitions?{request}";
+            var url = $"word.json/{Uri.EscapeDataString(request.Word)}/{apiPath}?{request}";
 
             var response = await _httpClient.GetAsync(url);
+
             if (!response.IsSuccessStatusCode)
             {
                 throw new HttpRequestException($"Request failed with status code {response.StatusCode}: {response.ReasonPhrase}");
             }
 
             var json = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<TResponse>(json);
+        }
 
-            return JsonConvert.DeserializeObject<IEnumerable<DefinitionResponse>>(json);
+        /// <inheritdoc />
+        public async Task<IEnumerable<DefinitionResponse>> GetDefinitionsAsync(GetDefinitionsRequest request)
+        {
+            return await SendRequestAsync<GetDefinitionsRequest, IEnumerable<DefinitionResponse>>(
+                "definitions",
+                request
+            );
+        }
+
+        /// <inheritdoc />
+        public async Task<ExamplesResponse> GetExamplesAsync(GetExamplesRequest request)
+        {
+            return await SendRequestAsync<GetExamplesRequest, ExamplesResponse>(
+                "examples",
+                request
+            );
         }
     }
 }

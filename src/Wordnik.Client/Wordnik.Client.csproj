@@ -16,7 +16,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>dotnet net csharp wordnik dictionary thesaurus</PackageTags>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
-    <ReleaseNotes>$(ReleaseNotes)</ReleaseNotes>
+	<PackageReleaseNotes>$(ReleaseNotes)</PackageReleaseNotes>
 	  
     <!-- Signing -->
 	<SignAssembly Condition="'$(SignAssemblyCondition)' == 'true'">true</SignAssembly>

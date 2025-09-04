@@ -21,6 +21,12 @@ namespace Wordnik.Client.Responses
         public string AttributionUrl { get; set; }
 
         /// <summary>
+        /// URL to the wordnik source for the definition.
+        /// </summary>
+        [JsonProperty("wordnikUrl")]
+        public string WordnikUrl { get; set; }
+
+        /// <summary>
         /// List of citation sources for the word definition.
         /// </summary>
         [JsonProperty("citations")]
@@ -103,5 +109,113 @@ namespace Wordnik.Client.Responses
         /// </summary>
         [JsonProperty("word")]
         public string Word { get; set; }
+    }
+
+    /// <summary>
+    /// Represents an annotation or note added to the definition.
+    /// </summary>
+    public class Note
+    {
+        /// <summary>
+        /// The type of note (e.g., editorial, linguistic).
+        /// </summary>
+        [JsonProperty("type")]
+        public string Type { get; set; }
+
+        /// <summary>
+        /// Text content of the note.
+        /// </summary>
+        [JsonProperty("text")]
+        public string Text { get; set; }
+    }
+
+    /// <summary>
+    /// Represents an example usage of a word in context.
+    /// </summary>
+    public class ExampleUse
+    {
+        /// <summary>
+        /// Example sentence or text demonstrating usage of the word.
+        /// </summary>
+        [JsonProperty("text")]
+        public string Text { get; set; }
+
+        /// <summary>
+        /// Undocumented field from Wordnik. TODO: resolve.
+        /// </summary>
+        [JsonProperty("position")]
+        public string Position { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a citation source for a word definition.
+    /// </summary>
+    public class Citation
+    {
+        /// <summary>
+        /// The text of the cited material for the definition.
+        /// </summary>
+        [JsonProperty("cite")]
+        public string Cite { get; set; }
+
+        /// <summary>
+        /// The source of the cited material (e.g., book, dictionary, article).
+        /// </summary>
+        [JsonProperty("source")]
+        public string Source { get; set; }
+    }
+
+    /// <summary>
+    /// Represents related words, such as synonyms or antonyms, associated with a word's definition.
+    /// </summary>
+    public class RelatedWord
+    {
+        /// <summary>
+        /// The type of relationship (e.g., synonym, antonym).
+        /// </summary>
+        [JsonProperty("relationshipType")]
+        public string RelationshipType { get; set; }
+
+        /// <summary>
+        /// A list of words that are connected via the specified relationship type.
+        /// </summary>
+        [JsonProperty("words")]
+        public List<string> Words { get; set; }
+    }
+
+    /// <summary>
+    /// Represents phonetic or pronunciation details for a word.
+    /// </summary>
+    public class TextPronunciation
+    {
+        /// <summary>
+        /// The raw pronunciation text.
+        /// </summary>
+        [JsonProperty("raw")]
+        public string Raw { get; set; }
+
+        /// <summary>
+        /// The type of pronunciation text (e.g., IPA, phonetic).
+        /// </summary>
+        [JsonProperty("rawType")]
+        public string RawType { get; set; }
+    }
+
+    /// <summary>
+    /// Represents additional labeling information such as domain, region, or usage.
+    /// </summary>
+    public class Label
+    {
+        /// <summary>
+        /// The type of the label (e.g., domain, region).
+        /// </summary>
+        [JsonProperty("type")]
+        public string Type { get; set; }
+
+        /// <summary>
+        /// The specific value for the label.
+        /// </summary>
+        [JsonProperty("text")]
+        public string Text { get; set; }
     }
 }
