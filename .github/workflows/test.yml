@@ -52,6 +52,11 @@ jobs:
           dotnet test Tests/Wordnik.Client.UnitTests/Wordnik.Client.UnitTests.csproj \
           --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --results-directory coverage-results
 
+      # Step 9: Locate coverage report file
+      - name: Locate Coverage Report
+        run: |
+          ls -l ./coverage-results
+
       # Step 10: Complete SonarCloud Analysis
       - name: End SonarCloud Analysis
         run: |
