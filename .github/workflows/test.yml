@@ -8,16 +8,13 @@ on:
 
 jobs:
   build-and-test:
+    name: Build and Test the Library project
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out the repository
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: 17
-          distribution: 'zulu' # Alternative distribution options are available.
-      - uses: actions/checkout@v4
+      # Step 1: Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -25,7 +22,7 @@ jobs:
       - name: Set up .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 8.0 
+          dotnet-version: 8.0
 
       # Step 3: Restore dependencies for all projects
       - name: Restore dependencies
@@ -35,7 +32,7 @@ jobs:
       - name: Build solution
         run: dotnet build ./Wordnik.Client.sln --no-restore
 
-      # Step 5: Install SonarCloud Scanner
+      # Step 5: Install SonarCloud Scanner and Dotnet Coverage
       - name: Install SonarCloud Scanner
         run: |
           dotnet tool install --global dotnet-sonarscanner
@@ -43,9 +40,13 @@ jobs:
 
       # Step 6: Start SonarCloud Analysis
       - name: Start SonarCloud Analysis
+        env:
+          SONAR_PROJECT: ${{ secrets.SONAR_PROJECT }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_OWNER: ${{ secrets.SONAR_OWNER }}
         run: |
-          dotnet-sonarscanner begin /k:"${{ secrets.SONAR_PROJECT }}" /o:"${{ secrets.SONAR_OWNER }}" \
-          /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
+          dotnet-sonarscanner begin /k:"$SONAR_PROJECT" /o:"$SONAR_OWNER" \
+          /d:sonar.login="$SONAR_TOKEN" \
           /d:sonar.host.url="https://sonarcloud.io" \
           /d:sonar.exclusions="Demo/**,Tests/Wordnik.Client.IntegrationTests/**" \
           /d:sonar.test.exclusions="Tests/Wordnik.Client.IntegrationTests/**" \
@@ -62,8 +63,10 @@ jobs:
 
       # Step 9: Complete SonarCloud Analysis
       - name: End SonarCloud Analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          dotnet-sonarscanner end /d:sonar.login="$SONAR_TOKEN"
 
       # Step 10: Run Integration Tests
       - name: Run Integration Tests
