@@ -43,7 +43,6 @@ jobs:
           SONAR_PROJECT: ${{ secrets.SONAR_PROJECT }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_OWNER: ${{ secrets.SONAR_OWNER }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           dotnet-sonarscanner begin /k:"$SONAR_PROJECT" /o:"$SONAR_OWNER" \
           /d:sonar.login="$SONAR_TOKEN" \
