@@ -141,7 +141,6 @@ public static class WordnikTestHelper
     public static async Task RunInvalidWordValidationTest<TRequest>(
         Func<WordnikClient, TRequest, Task> apiMethod,
         TRequest request,
-        string expectedParamName,
         string expectedExceptionMessagePart)
     {
         // Arrange
@@ -151,7 +150,7 @@ public static class WordnikTestHelper
         // Act & Assert
         var exception = await Assert.ThrowsAsync<ArgumentException>(() => apiMethod(wordnikClient, request));
 
-        Assert.Equal(expectedParamName, exception.ParamName);
+        Assert.Equal(nameof(request), exception.ParamName);
         Assert.Contains(expectedExceptionMessagePart, exception.Message);
     }
 

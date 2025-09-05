@@ -54,7 +54,6 @@ public class GetDefinitionsAsyncTests
         await WordnikTestHelper.RunInvalidWordValidationTest(
             (client, req) => client.GetDefinitionsAsync(req),
             request,
-            "Word",
             "Word cannot be null or empty.");
     }
 

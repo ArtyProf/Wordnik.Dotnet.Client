@@ -59,7 +59,6 @@ public class GetExamplesAsyncTests
         await WordnikTestHelper.RunInvalidWordValidationTest(
             (client, req) => client.GetExamplesAsync(req),
             request,
-            "Word",
             "Word cannot be null or empty.");
     }
 
