@@ -57,7 +57,10 @@ jobs:
           /d:sonar.host.url="https://sonarcloud.io" \
           /d:sonar.exclusions="Demo/**,Tests/Wordnik.Client.IntegrationTests/**" \
           /d:sonar.test.exclusions="Tests/Wordnik.Client.IntegrationTests/**" \
-          /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml"
+          /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml" \
+          /d:sonar.pullrequest.key="${{ github.event.pull_request.number }}" \
+          /d:sonar.pullrequest.branch="${{ github.head_ref }}" \
+          /d:sonar.pullrequest.base="${{ github.base_ref }}"
 
       # Step 8: Build the Wordnik.Client project
       - name: Build Wordnik.Client
