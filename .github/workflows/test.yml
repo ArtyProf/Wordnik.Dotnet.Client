@@ -23,7 +23,7 @@ jobs:
         with:
           dotnet-version: 8.0
 
-      # Step 3: Set up Java
+      # Step 3: Set up Java SDK
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
