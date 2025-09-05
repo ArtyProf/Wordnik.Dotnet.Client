@@ -4,6 +4,9 @@ using System.Reflection;
 
 namespace Wordnik.Client.Helpers
 {
+    /// <summary>
+    /// Provides extension methods for enums to help convert them into API-specific formats or strings.
+    /// </summary>
     public static class EnumExtensions
     {
         /// <summary>

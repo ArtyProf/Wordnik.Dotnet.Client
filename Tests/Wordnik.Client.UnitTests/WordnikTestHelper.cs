@@ -168,7 +168,7 @@ public static class WordnikTestHelper
         string malformedJson,
         Func<WordnikClient, TRequest, Task> apiMethod,
         TRequest request,
-        string? expectedExceptionMessagePart = null)
+        string expectedExceptionMessagePart = null)
         where TException : Exception
     {
         // Arrange
@@ -212,7 +212,7 @@ public static class WordnikTestHelper
         Exception exceptionToThrow,
         Func<WordnikClient, TRequest, Task> apiMethod,
         TRequest request,
-        string? expectedMessage = null)
+        string expectedMessage = null)
         where TException : Exception
     {
         // Arrange

@@ -16,8 +16,8 @@ namespace Wordnik.Client.UnitTests.Requests
         [InlineData(
             // Case 2: Empty parts of speech and dictionaries
             "example2", 5, "false", "false", "false",
-            new PartOfSpeechType[] { },
-            new SourceDictionariesType[] { },
+            new PartOfSpeechType[0],
+            new SourceDictionariesType[0],
             "limit=5&includeRelated=false&useCanonical=false&includeTags=false"
         )]
         [InlineData(

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -50,14 +51,14 @@ namespace Wordnik.Client
         private async Task<TResponse> SendRequestAsync<TRequest, TResponse>(string apiPath, TRequest request)
             where TRequest : IWord
         {
-            if (request == null)
+            if (EqualityComparer<TRequest>.Default.Equals(request, default))
             {
                 throw new ArgumentNullException(nameof(request), "Request object cannot be null.");
             }
 
             if (string.IsNullOrWhiteSpace(request.Word))
             {
-                throw new ArgumentException("Word cannot be null or empty.", nameof(request.Word));
+                throw new ArgumentException("Word cannot be null or empty.", "request.Word");
             }
 
             var url = $"word.json/{Uri.EscapeDataString(request.Word)}/{apiPath}?{request}";
