@@ -58,7 +58,7 @@ namespace Wordnik.Client
 
             if (string.IsNullOrWhiteSpace(request.Word))
             {
-                throw new ArgumentException("Word cannot be null or empty.", nameof(IWord.Word));
+                throw new ArgumentException("Word cannot be null or empty.", nameof(request));
             }
 
             var url = $"word.json/{Uri.EscapeDataString(request.Word)}/{apiPath}?{request}";
