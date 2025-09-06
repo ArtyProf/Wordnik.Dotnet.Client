@@ -29,13 +29,13 @@ jobs:
       - name: Rewrite base href
         uses: SteveSandersonMS/ghaction-rewrite-base-href@v1.1.0
         with:
-          html_path: Docs/build/index.html
+          html_path: Docs/build/wwwroot/index.html
           base_href: /Wordnik.Client/
 
       # add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project. 
       # Allow files and folders starting with an underscore.
       - name: Add .nojekyll file
-        run: touch Docs/build/.nojekyll
+        run: touch Docs/build/wwwroot/.nojekyll
       # Step 4: Deploy generated files to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
