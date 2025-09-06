@@ -30,7 +30,7 @@ jobs:
 
       # Step 4: Rewrite base href to match github domain
       - name: Rewrite base href
-        uses: SteveSandersonMS/ghaction-rewrite-base-href@v1.1.0
+        uses: SteveSandersonMS/ghaction-rewrite-base-href@4583ede549773dabe1410c42e703d54cf52859ff
         with:
           html_path: Docs/build/wwwroot/index.html
           base_href: /Wordnik.Client/
@@ -45,7 +45,7 @@ jobs:
 
       # Step 7: Deploy generated files to GitHub Pages
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@b80a30e9bf3c1ec596532c3813f0aff094f555e2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: Docs/build/wwwroot
