@@ -2,6 +2,8 @@ name: Deploy Blazor WASM App to GitHub Pages
 
 on:
   push:
+    branches:
+      - main
     paths:
       - 'Docs/**'
 
@@ -26,17 +28,22 @@ jobs:
         run: |
           dotnet publish Docs/Wordnik.Client.Docs.csproj -c Release -o Docs/build
 
+      # Step 4: Rewrite base href to match github domain
       - name: Rewrite base href
         uses: SteveSandersonMS/ghaction-rewrite-base-href@v1.1.0
         with:
           html_path: Docs/build/wwwroot/index.html
           base_href: /Wordnik.Client/
+      
+      # Step 5: Copy index.html to 404.html to serve the same file when a file is not found
+      - name: copy index.html to 404.html
+        run: cp Docs/build/wwwroot/index.html Docs/build/wwwroot/404.html
 
-      # add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project. 
-      # Allow files and folders starting with an underscore.
+      # Step 6: Add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project. Allow files and folders starting with an underscore.
       - name: Add .nojekyll file
         run: touch Docs/build/wwwroot/.nojekyll
-      # Step 4: Deploy generated files to GitHub Pages
+
+      # Step 7: Deploy generated files to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
