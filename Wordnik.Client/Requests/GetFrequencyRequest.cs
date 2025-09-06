@@ -4,37 +4,46 @@ using System.Collections.Generic;
 namespace Wordnik.Client.Requests
 {
     /// <summary>
-    /// Represents the request parameters for the Wordnik API examples endpoint.
+    /// Represents the request model for the Wordnik frequency API.
+    /// Contains parameters required to fetch word frequency data.
     /// </summary>
-    public class GetExamplesRequest : IWord
+    public class GetFrequencyRequest : IWord
     {
         /// <summary>
-        /// Gets or sets the word to return examples for. This is a required parameter.
+        /// The word for which frequency data is requested.
         /// </summary>
+        /// <example>ball</example>
         public string Word { get; set; }
 
         /// <summary>
-        /// Gets or sets whether to include duplicate examples from different sources.
-        /// This is an optional parameter. Defaults to <c>false</c>.
+        /// If true, include duplicate examples from different sources.
+        /// If false, removes duplicates.
+        /// Default is false.
         /// </summary>
+        /// <example>false</example>
         public bool IncludeDuplicates { get; set; } = false;
 
         /// <summary>
-        /// Gets or sets whether to use the canonical form of the word (e.g., transform 'cats' to 'cat').
-        /// This is an optional parameter. Defaults to <c>false</c>.
+        /// If true, fetches the canonical form of the word (e.g., "cats" -> "cat").
+        /// If false, fetches the exact word requested.
+        /// Default is false.
         /// </summary>
+        /// <example>false</example>
         public bool UseCanonical { get; set; } = false;
 
         /// <summary>
-        /// Gets or sets the number of results to skip in the response.
-        /// This is an optional parameter. Defaults to <c>0</c>.
+        /// The number of results to skip from the start.
+        /// Useful for pagination.
+        /// Default is 0.
         /// </summary>
-        public int? Skip { get; set; }
+        /// <example>0</example>
+        public int Skip { get; set; } = 0;
 
         /// <summary>
-        /// Gets or sets the maximum number of results to return.
-        /// This is an optional parameter. Defaults to <c>5</c>.
+        /// The maximum number of results to return.
+        /// Default is 5.
         /// </summary>
+        /// <example>5</example>
         public int Limit { get; set; } = 5;
 
         /// <summary>
@@ -52,17 +61,17 @@ namespace Wordnik.Client.Requests
 
             if (IncludeDuplicates)
             {
-                queryParams.Add($"includeDuplicates={IncludeDuplicates}");
+                queryParams.Add($"includeDuplicates={IncludeDuplicates.ToString()}");
             }
 
             if (UseCanonical)
             {
-                queryParams.Add($"useCanonical={UseCanonical}");
+                queryParams.Add($"useCanonical={UseCanonical.ToString()}");
             }
 
-            if (Skip.HasValue)
+            if (Skip > 0)
             {
-                queryParams.Add($"skip={Skip.Value}");
+                queryParams.Add($"skip={Skip}");
             }
 
             if (Limit > 0)

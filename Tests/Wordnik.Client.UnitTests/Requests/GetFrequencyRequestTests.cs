@@ -2,47 +2,45 @@
 
 namespace Wordnik.Client.UnitTests.Requests;
 
-public class GetExamplesRequestTests
+public class GetFrequencyRequestTests
 {
     [Theory]
     [InlineData(
             // Case 1: All default values
-            "test", false, false, null, 0,
+            "test", false, 0, 0,
             "word=test"
         )]
     [InlineData(
-            // Case 2: Include duplicates with canonical
-            "example", true, true, null, 0,
-            "word=example&includeDuplicates=True&useCanonical=True"
+            // Case 2: Include canonical form only
+            "example", true, 0, 0,
+            "word=example&useCanonical=True"
         )]
     [InlineData(
             // Case 3: Skip and limit set
-            "word", false, false, 5, 10,
-            "word=word&skip=5&limit=10"
+            "sample", false, 5, 10,
+            "word=sample&skip=5&limit=10"
         )]
     [InlineData(
-            // Case 4: Include limit only
-            "sample", false, false, null, 7,
-            "word=sample&limit=7"
+            // Case 4: Only skip set
+            "word", false, 7, 0,
+            "word=word&skip=7"
         )]
     [InlineData(
-            // Case 5: Only canonical form
-            "example", false, true, null, 0,
-            "word=example&useCanonical=True"
+            // Case 5: Only limit set
+            "data", false, 0, 15,
+            "word=data&limit=15"
         )]
     public void ToString_ShouldGenerateCorrectQueryString(
             string word,
-            bool includeDuplicates,
             bool useCanonical,
-            int? skip,
+            int skip,
             int limit,
             string expectedQueryString)
     {
         // Arrange
-        var request = new GetExamplesRequest
+        var request = new GetFrequencyRequest
         {
             Word = word,
-            IncludeDuplicates = includeDuplicates,
             UseCanonical = useCanonical,
             Skip = skip,
             Limit = limit,
