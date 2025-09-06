@@ -3,7 +3,6 @@
 [![nuget](https://img.shields.io/nuget/dt/Wordnik.Client?color=blue&label=downloads&logo=NuGet&style=flat-square)](https://www.nuget.org/packages/Wordnik.Client)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ArtyProf_Wordnik.Client&metric=alert_status)](https://sonarcloud.io/summary/overall?id=ArtyProf_Wordnik.Client)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ArtyProf_Wordnik.Client&metric=coverage)](https://sonarcloud.io/summary/overall?id=ArtyProf_Wordnik.Client)
-[![Hits](https://hits.sh/github.com/ArtyProf/Wordnik.Client.svg)](https://hits.sh/github.com/ArtyProf/Wordnik.Client/)
 
 # Wordnik.Client
 

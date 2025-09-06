@@ -1,0 +1,52 @@
+name: Deploy Blazor WASM App to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'Docs/**'
+
+jobs:
+  build-and-deploy:
+    name: Deploy Docs to Github Pages
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository to the runner
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up .NET SDK
+      - name: Setup .NET Environment
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0'
+
+      # Step 3: Restore and build the Blazor WASM project in the Docs folder
+      - name: Build Blazor WASM project with docs
+        run: |
+          dotnet publish Docs/Wordnik.Client.Docs.csproj -c Release -o Docs/build
+
+      # Step 4: Rewrite base href to match github domain
+      - name: Rewrite base href
+        uses: SteveSandersonMS/ghaction-rewrite-base-href@4583ede549773dabe1410c42e703d54cf52859ff
+        with:
+          html_path: Docs/build/wwwroot/index.html
+          base_href: /Wordnik.Client/
+      
+      # Step 5: Copy index.html to 404.html to serve the same file when a file is not found
+      - name: copy index.html to 404.html
+        run: cp Docs/build/wwwroot/index.html Docs/build/wwwroot/404.html
+
+      # Step 6: Add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project. Allow files and folders starting with an underscore.
+      - name: Add .nojekyll file
+        run: touch Docs/build/wwwroot/.nojekyll
+
+      # Step 7: Deploy generated files to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@b80a30e9bf3c1ec596532c3813f0aff094f555e2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: Docs/build/wwwroot
+          force_orphan: true
