@@ -48,8 +48,8 @@ jobs:
           dotnet-sonarscanner begin /k:"$SONAR_PROJECT" /o:"$SONAR_OWNER" \
           /d:sonar.login="$SONAR_TOKEN" \
           /d:sonar.host.url="https://sonarcloud.io" \
-          /d:sonar.exclusions="Demo/**,Tests/Wordnik.Client.IntegrationTests/**" \
           /d:sonar.test.exclusions="Tests/Wordnik.Client.IntegrationTests/**" \
+          /d:sonar.coverage.exclusions="Docs/**,Demo/**" \
           /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml"
 
       # Step 7: Build the Wordnik.Client project
