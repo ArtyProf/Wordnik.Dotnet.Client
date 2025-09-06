@@ -6,7 +6,7 @@ public class ExamplesIntegrationTests : IntegrationTestBase
 {
     [Theory]
     [InlineData("example", 3)]
-    public async Task GetDefinitions_WhenCalled_ShouldReturnDefinitions(string word, int limit)
+    public async Task GetExamplesAsync_WhenCalled_ShouldReturnExamples(string word, int limit)
     {
         // Arrange
         var client = new WordnikClient(_httpClient, _apiKey);

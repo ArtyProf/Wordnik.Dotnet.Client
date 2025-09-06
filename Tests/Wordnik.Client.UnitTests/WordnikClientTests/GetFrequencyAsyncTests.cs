@@ -13,7 +13,7 @@ public class GetFrequencyAsyncTests
     {
         var responseContent = JsonConvert.SerializeObject(new FrequencyResponse
         {
-            Frequency =
+            FrequenciesByYears =
             [
                 new FrequencyYear
                 {
@@ -23,8 +23,8 @@ public class GetFrequencyAsyncTests
             ]
         });
 
-        var request = new GetFrequencyRequest { Word = "example", Limit = 1 };
-        var expectedUrl = $"{WordnikConstants.WordnikApiUrl}word.json/example/examples?{request}";
+        var request = new GetFrequencyRequest { Word = "example" };
+        var expectedUrl = $"{WordnikConstants.WordnikApiUrl}word.json/example/frequency?{request}";
 
         await WordnikTestHelper.RunGenericApiMethodTest(
             mockResponseContent: responseContent,
@@ -34,7 +34,7 @@ public class GetFrequencyAsyncTests
             assertions: response =>
             {
                 Assert.NotNull(response);
-                Assert.Equal("1900", response.Frequency.First().Year);
+                Assert.Equal("1900", response.FrequenciesByYears.First().Year);
             });
     }
 
@@ -67,7 +67,7 @@ public class GetFrequencyAsyncTests
     public async Task GetFrequencyAsync_HttpResponseIsNotSuccess_ShouldThrowHttpRequestException()
     {
         var request = new GetFrequencyRequest { Word = "example" };
-        var expectedUrl = $"{WordnikConstants.WordnikApiUrl}word.json/example/examples?{request}";
+        var expectedUrl = $"{WordnikConstants.WordnikApiUrl}word.json/example/frequency?{request}";
 
         await WordnikTestHelper.RunHttpFailureTest(
             statusCode: HttpStatusCode.BadRequest,

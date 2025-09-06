@@ -95,7 +95,7 @@ namespace Wordnik.Client
         public async Task<FrequencyResponse> GetFrequencyAsync(GetFrequencyRequest request)
         {
             return await SendRequestAsync<GetFrequencyRequest, FrequencyResponse>(
-                "examples",
+                "frequency",
                 request
             );
         }

@@ -6,44 +6,39 @@ public class GetFrequencyRequestTests
 {
     [Theory]
     [InlineData(
-            // Case 1: All default values
-            "test", false, 0, 0,
-            "word=test"
+            "apple", false, 1900, 2000,
+            "word=apple&useCanonical=false&startYear=1900&endYear=2000"
         )]
     [InlineData(
-            // Case 2: Include canonical form only
-            "example", true, 0, 0,
-            "word=example&useCanonical=True"
+            "ball", true, null, null,
+            "word=ball&useCanonical=true"
         )]
     [InlineData(
-            // Case 3: Skip and limit set
-            "sample", false, 5, 10,
-            "word=sample&skip=5&limit=10"
+            "car", null, null, null,
+            "word=car"
         )]
     [InlineData(
-            // Case 4: Only skip set
-            "word", false, 7, 0,
-            "word=word&skip=7"
+            "data", null, null, 2015,
+            "word=data&endYear=2015"
         )]
     [InlineData(
-            // Case 5: Only limit set
-            "data", false, 0, 15,
-            "word=data&limit=15"
+            "example", true, 1800, null,
+            "word=example&useCanonical=true&startYear=1800"
         )]
     public void ToString_ShouldGenerateCorrectQueryString(
-            string word,
-            bool useCanonical,
-            int skip,
-            int limit,
-            string expectedQueryString)
+        string word,
+        bool? useCanonical,
+        int? startYear,
+        int? endYear,
+        string expectedQueryString)
     {
         // Arrange
         var request = new GetFrequencyRequest
         {
             Word = word,
             UseCanonical = useCanonical,
-            Skip = skip,
-            Limit = limit,
+            StartYear = startYear,
+            EndYear = endYear
         };
 
         // Act
