@@ -45,8 +45,8 @@ jobs:
 
       # Step 7: Deploy generated files to GitHub Pages
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@b80a30e9bf3c1ec596532c3813f0aff094f555e2
+        uses: JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: Docs/build/wwwroot
-          force_orphan: true
+          branch: gh-pages
+          folder: Docs/build/wwwroot
+          clean: true                 
