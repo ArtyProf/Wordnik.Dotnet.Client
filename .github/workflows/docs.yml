@@ -2,10 +2,10 @@ name: Deploy Blazor WASM App to GitHub Pages
 
 on:
   push:
-  #  branches:
- #     - main
-#    paths:
-#      - 'Docs/**'
+    branches:
+      - main
+    paths:
+      - 'Docs/**'
 
 jobs:
   build-and-deploy:
