@@ -7,22 +7,23 @@ namespace Wordnik.Client.Requests
     /// Represents the request parameters for the Wordnik API examples endpoint.
     /// </summary>
     public class GetExamplesRequest : IWord
-    {/// <summary>
-     /// Gets or sets the word to return examples for. This is a required parameter.
-     /// </summary>
+    {
+        /// <summary>
+        /// Gets or sets the word to return examples for. This is a required parameter.
+        /// </summary>
         public string Word { get; set; }
 
         /// <summary>
         /// Gets or sets whether to include duplicate examples from different sources.
         /// This is an optional parameter. Defaults to <c>false</c>.
         /// </summary>
-        public bool? IncludeDuplicates { get; set; }
+        public bool IncludeDuplicates { get; set; } = false;
 
         /// <summary>
         /// Gets or sets whether to use the canonical form of the word (e.g., transform 'cats' to 'cat').
         /// This is an optional parameter. Defaults to <c>false</c>.
         /// </summary>
-        public bool? UseCanonical { get; set; }
+        public bool UseCanonical { get; set; } = false;
 
         /// <summary>
         /// Gets or sets the number of results to skip in the response.
@@ -34,7 +35,7 @@ namespace Wordnik.Client.Requests
         /// Gets or sets the maximum number of results to return.
         /// This is an optional parameter. Defaults to <c>5</c>.
         /// </summary>
-        public int? Limit { get; set; }
+        public int Limit { get; set; } = 5;
 
         /// <summary>
         /// Constructs a query string from the request parameters.
@@ -49,14 +50,14 @@ namespace Wordnik.Client.Requests
                 queryParams.Add($"word={Uri.EscapeDataString(Word)}");
             }
 
-            if (IncludeDuplicates.HasValue)
+            if (IncludeDuplicates)
             {
-                queryParams.Add($"includeDuplicates={IncludeDuplicates.Value}");
+                queryParams.Add($"includeDuplicates={IncludeDuplicates}");
             }
 
-            if (UseCanonical.HasValue)
+            if (UseCanonical)
             {
-                queryParams.Add($"useCanonical={UseCanonical.Value}");
+                queryParams.Add($"useCanonical={UseCanonical}");
             }
 
             if (Skip.HasValue)
@@ -64,9 +65,9 @@ namespace Wordnik.Client.Requests
                 queryParams.Add($"skip={Skip.Value}");
             }
 
-            if (Limit.HasValue)
+            if (Limit > 0)
             {
-                queryParams.Add($"limit={Limit.Value}");
+                queryParams.Add($"limit={Limit}");
             }
 
             return string.Join("&", queryParams);

@@ -90,5 +90,14 @@ namespace Wordnik.Client
                 request
             );
         }
+
+        /// <inheritdoc />
+        public async Task<FrequencyResponse> GetFrequencyAsync(GetFrequencyRequest request)
+        {
+            return await SendRequestAsync<GetFrequencyRequest, FrequencyResponse>(
+                "frequency",
+                request
+            );
+        }
     }
 }

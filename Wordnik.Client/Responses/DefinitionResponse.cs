@@ -90,7 +90,7 @@ namespace Wordnik.Client.Responses
         /// The name of the source dictionary (e.g., WordNet, Wiktionary).
         /// </summary>
         [JsonProperty("sourceDictionary")]
-        public string SourceDictionary { get; set; }
+        public string       SourceDictionary { get; set; }
 
         /// <summary>
         /// The core textual definition of the word.
@@ -139,12 +139,6 @@ namespace Wordnik.Client.Responses
         /// </summary>
         [JsonProperty("text")]
         public string Text { get; set; }
-
-        /// <summary>
-        /// Undocumented field from Wordnik. TODO: resolve.
-        /// </summary>
-        [JsonProperty("position")]
-        public string Position { get; set; }
     }
 
     /// <summary>
